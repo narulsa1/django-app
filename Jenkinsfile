@@ -17,7 +17,7 @@ pipeline {
         }
         stage('Unit Test'){
            steps{
-              sh 'cd /app'
+              sh 'cd app'
               sh 'python manage.py makemigrations'
               sh 'python manage.py migrate'
               sh 'python manage.py test'
