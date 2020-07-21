@@ -1,10 +1,6 @@
 pipeline {
 	agent any
 
-	   tools {
-	           python "python-3.7"
-	           sqlite3 "sqlite3.29"
-	   }
 
 	stages {
 	    stage('Git Checkout'){
