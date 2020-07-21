@@ -11,6 +11,9 @@ pipeline {
          
         stage('Configuration'){
            steps{
+           sh 'python3.6 -m pip install --user virtualenv'
+           sh 'python3 -m venv env'
+           sh 'source env/bin/activate'
            sh 'pip install -r requirements.txt'
            } 
 
