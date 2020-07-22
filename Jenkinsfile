@@ -12,7 +12,7 @@ pipeline {
         stage('Configuration'){
            steps{
            sh 'python -m pip install --user virtualenv'
-           sh 'python -m venv env'
+           sh 'python -m virtualenv env'
            sh 'source env/bin/activate'
            sh 'pip install -r requirements.txt'
            } 
