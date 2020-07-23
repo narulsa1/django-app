@@ -10,6 +10,16 @@ pipeline {
 	          }     
 	      }
          
+<<<<<<< HEAD
+=======
+        stage('Configuration'){
+           steps{
+           sh 'python -m pip install --user virtualenv'
+           sh 'python -m virtualenv env'
+           sh 'source env/bin/activate'
+           sh 'pip install -r requirements.txt'
+           } 
+>>>>>>> 1764258a7d53130a79b628d329b8d42e03b0d8ff
 
         
         stage('Build Docker Image'){
