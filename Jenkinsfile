@@ -1,43 +1,35 @@
 pipeline {
 	agent any
 
+	   
 
 	stages {
-	    stage('Git Checkout'){
-	       steps {
-	         git 'https://github.com/narulsa1/django-app'
-	       }     
-	    }
+	      stage('Git Checkout'){
+	         steps {
+	            git 'https://github.com/narulsa1/django-app'
+	          }     
+	      }
          
-        stage('Configuration'){
-           steps{
-           sh 'python3.6 -m pip install --user virtualenv'
-           sh 'python3 -m venv env'
-           sh 'source env/bin/activate'
-           sh 'pip install -r requirements.txt'
-           } 
 
-        }
-        stage('Unit Test'){
+        
+        stage('Build Docker Image'){
            steps{
-              sh 'cd app'
-              sh 'python manage.py makemigrations'
-              sh 'python manage.py migrate'
-              sh 'python manage.py test'
+              sh 'docker images -a | grep "django-app" | awk '{print $3}'| xargs docker rmi -f'
+              sh 'docker build -t django-app .'
             }
  	      }
- 	      stage('Checklist') {
+ 	      stage('Push Docker Image') {
  	         steps {
- 	            sh 'cd app'
-              sh 'python manage.py check --deploy'
- 	         }
+              withCredentials([usernameColonPassword(credentialsId: 'dockerhub', variable: 'dockerhubPwd')]) {
+                sh 'docker login -u snarula -p ${dockerhubPwd}'
+               }
+            }
  	      }
-        stage('Style check') {
+        stage('Docker container') {
            steps{
-              sh 'pip install flake8'
-              sh 'flake8 app/ --max-line-length=127'
-           }
-    }
+              sh 'docker run -itd -p 8020:8020 -e  DJANGO_SUPERUSER_USERNAME=admin -e DJANGO_SUPERUSER_PASSWORD=sekret1 -e DJANGO_SUPERUSER_EMAIL=admin@example.com django-app'
+            }
+       }
 
   }
 }
